@@ -34,3 +34,8 @@
 *.pdb
 *.enc
 *.idb
+*.suo
+*.opensdf
+*.sdf
+*.sln
+*.user
