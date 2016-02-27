@@ -37,7 +37,7 @@ int main(int argc, char ** argv) {
 
 	if (std::string("-e").compare(argv[1]) == 0) {
 		ifstream ifile;
-		ofstream ofile;
+		fstream ofile;
 		ifile.open(argv[3], fstream::in | fstream::binary);
 		ofile.open(argv[4], fstream::out | fstream::binary);
 
@@ -54,6 +54,9 @@ int main(int argc, char ** argv) {
 			unsigned char obuffer[BUFFER_SIZE + 16];
 			unsigned char iv[17] = "0123456789012345";
 			size_t len = BUFFER_SIZE;
+			unsigned char hash[64];
+			ofile.write(reinterpret_cast<char *>(hash), 64);
+			ofile.write(reinterpret_cast<char *>(iv), 16);
 
 			while (!ifile.eof()) {
 				ifile.read(buffer, BUFFER_SIZE);
@@ -66,14 +69,10 @@ int main(int argc, char ** argv) {
 				ofile.write(reinterpret_cast<char *>(obuffer), len);
 			}
 
-			unsigned char hash[64];
+			
 			mbedtls_sha512_finish(&sha, hash);
-
-			//unsigned char ehash[129];
-			//size_t olen;
-			//mbedtls_base64_encode(ehash, 129, &olen, hash, 64);
-
-			//ofile.write(reinterpret_cast<char *>(hash), 64);
+			ofile.seekg(0, ofile.beg);
+			ofile.write(reinterpret_cast<char *>(hash), 64);
 
 			ifile.close();
 			ofile.close();
@@ -100,16 +99,20 @@ int main(int argc, char ** argv) {
 
 			char buffer[BUFFER_SIZE + 16];
 			unsigned char obuffer[BUFFER_SIZE + 16];
-			unsigned char iv[17] = "0123456789012345";
+			unsigned char iv[16];
 			size_t len = BUFFER_SIZE;
+			unsigned char ohash[64];
+
+			ifile.read(reinterpret_cast<char *>(ohash), 64);
+			ifile.read(reinterpret_cast<char *>(iv), 16);
 
 			while (!ifile.eof()) {
 				ifile.read(buffer, BUFFER_SIZE);
 
 				if (ifile.eof()) len = ifile.gcount();
 
+				mbedtls_sha512_update(&sha, reinterpret_cast<unsigned char *>(buffer), len);
 				mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, len, iv, reinterpret_cast<unsigned char *>(buffer), obuffer);
-				mbedtls_sha512_update(&sha, obuffer, len);
 
 				if (ifile.eof()) {
 					len = remove_padding(obuffer, len);
@@ -120,6 +123,8 @@ int main(int argc, char ** argv) {
 
 			unsigned char hash[64];
 			mbedtls_sha512_finish(&sha, hash);
+
+			if (memcmp(ohash, hash, 64) != 0) return 2;
 
 			//unsigned char ehash[129];
 			//size_t olen;
