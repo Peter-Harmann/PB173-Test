@@ -26,3 +26,11 @@
 *.exe
 *.out
 *.app
+
+# VS Junk
+*.log
+*.tlog
+*.ilk
+*.pdb
+*.enc
+*.idb
