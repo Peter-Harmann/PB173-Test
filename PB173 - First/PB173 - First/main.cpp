@@ -50,6 +50,7 @@ int main(int argc, char ** argv) {
 		if (ifile && ofile) {
 			mbedtls_entropy_context entropy;
 			mbedtls_entropy_init(&entropy);
+			mbedtls_entropy_gather(&entropy);
 
 			mbedtls_ctr_drbg_context ctr_drbg;
 			char *personalization = "]76kXV-$P?0qdQtfpkTPUSvWcq&(dyub";
