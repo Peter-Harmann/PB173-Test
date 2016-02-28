@@ -30,5 +30,17 @@
     <ClCompile Include="base64.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ctr_drbg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entropy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entropy_poll.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timing.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

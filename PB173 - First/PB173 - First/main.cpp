@@ -8,6 +8,8 @@
 #include "mbedtls/aes.h"
 #include "mbedtls/sha512.h"
 #include "mbedtls/base64.h"
+#include "mbedtls/entropy.h"
+#include "mbedtls/ctr_drbg.h"
 
 using namespace std;
 
@@ -26,7 +28,6 @@ size_t add_padding(char * str, size_t len) {
 
 size_t remove_padding(unsigned char * str, size_t len) {
 	unsigned char rem = str[len-1];
-	cout << len - rem;
 	return len - rem;
 }
 
@@ -34,6 +35,11 @@ size_t remove_padding(unsigned char * str, size_t len) {
 
 int main(int argc, char ** argv) {
 	if (argc != 5) return 1;
+	if (strlen(argv[2]) != 16) {
+		cout << "Key has to be 16 characters long!";
+		return 6;
+	}
+
 
 	if (std::string("-e").compare(argv[1]) == 0) {
 		ifstream ifile;
@@ -41,7 +47,16 @@ int main(int argc, char ** argv) {
 		ifile.open(argv[3], fstream::in | fstream::binary);
 		ofile.open(argv[4], fstream::out | fstream::binary);
 
-		if (ifile) {
+		if (ifile && ofile) {
+			mbedtls_entropy_context entropy;
+			mbedtls_entropy_init(&entropy);
+
+			mbedtls_ctr_drbg_context ctr_drbg;
+			char *personalization = "]76kXV-$P?0qdQtfpkTPUSvWcq&(dyub";
+
+			mbedtls_ctr_drbg_init(&ctr_drbg);
+			mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char *)personalization, strlen(personalization));
+
 			mbedtls_sha512_context sha;
 			mbedtls_sha512_init(&sha);
 			mbedtls_sha512_starts(&sha, 0);
@@ -52,9 +67,11 @@ int main(int argc, char ** argv) {
 
 			char buffer[BUFFER_SIZE + 16];
 			unsigned char obuffer[BUFFER_SIZE + 16];
-			unsigned char iv[17] = "0123456789012345";
+			unsigned char iv[16];
 			size_t len = BUFFER_SIZE;
 			unsigned char hash[64];
+
+			mbedtls_ctr_drbg_random(&ctr_drbg, iv, 16);
 			ofile.write(reinterpret_cast<char *>(hash), 64);
 			ofile.write(reinterpret_cast<char *>(iv), 16);
 
@@ -77,6 +94,16 @@ int main(int argc, char ** argv) {
 			ifile.close();
 			ofile.close();
 		}
+		else {
+			if (!ifile) {
+				cout << "Invalid input file!" << endl;
+				return 3;
+			}
+			if (!ofile) {
+				cout << "Invalid output file!" << endl;
+				return 4;
+			}
+		}
 	}
 	else if (std::string("-d").compare(argv[1]) == 0) {
 		ifstream ifile;
@@ -84,11 +111,7 @@ int main(int argc, char ** argv) {
 		ifile.open(argv[3], fstream::in | fstream::binary);
 		ofile.open(argv[4], fstream::out | fstream::binary);
 
-		//ifile.seekg(0, ifile.end);
-		//size_t iFileLength = ifile.tellg();
-		//ifile.seekg(0, ifile.beg);
-
-		if (ifile) {
+		if (ifile && ofile) {
 			mbedtls_sha512_context sha;
 			mbedtls_sha512_init(&sha);
 			mbedtls_sha512_starts(&sha, 0);
@@ -121,23 +144,36 @@ int main(int argc, char ** argv) {
 				ofile.write(reinterpret_cast<char *>(obuffer), len);
 			}
 
+			ifile.close();
+			ofile.close();
+
 			unsigned char hash[64];
 			mbedtls_sha512_finish(&sha, hash);
 
-			if (memcmp(ohash, hash, 64) != 0) return 2;
-
-			//unsigned char ehash[129];
-			//size_t olen;
-			//mbedtls_base64_encode(ehash, 129, &olen, hash, 64);
-
-			//ofile.write(reinterpret_cast<char *>(hash), 64);
-
-			ifile.close();
-			ofile.close();
+			if (memcmp(ohash, hash, 64) != 0) {
+				ofile.open(argv[4], fstream::out | fstream::binary);
+				ofile.close();
+				cout << "File is corrupted or invalid format!" << endl;
+				cout << "Press any key to continue!";
+				cin.get();
+				return 2;
+			}			
+		}
+		else {
+			if (!ifile) {
+				cout << "Invalid input file!" << endl;
+				return 3;
+			}
+			if (!ofile) {
+				cout << "Invalid output file!" << endl;
+				return 4;
+			}
 		}
 	}
-	
-	//cin.get();
+	else {
+		cout << "Invalid switch. -e and -d allowed.";
+		return 5;
+	}
 	return 0;
 }
 

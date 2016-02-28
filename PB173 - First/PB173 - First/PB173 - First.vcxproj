@@ -149,8 +149,12 @@
     <ClCompile Include="aes.c" />
     <ClCompile Include="aesni.c" />
     <ClCompile Include="base64.c" />
+    <ClCompile Include="ctr_drbg.c" />
+    <ClCompile Include="entropy.c" />
+    <ClCompile Include="entropy_poll.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="sha512.c" />
+    <ClCompile Include="timing.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
