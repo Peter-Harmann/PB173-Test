@@ -9,11 +9,11 @@ CXXFLAGS=-Wall -Wextra
 SOURCES_GEN=$(wildcard PB173/PB173/*.c)
 # Source and object lists for main program
 SOURCES_MAIN=$(SOURCES_GEN) PB173/PB173/main.cpp
-MIXED_MAIN=$(SOURCES_MAIN:.c=.c.o)
+MIXED_MAIN=$(SOURCES_MAIN:.c=.o)
 OBJECTS_MAIN=$(MIXED_MAIN:.cpp=.o)
 # Source and object lists for testing binary
 SOURCES_TEST=$(SOURCES_GEN) PB173/PB173/testing.cpp
-MIXED_TEST=$(SOURCES_TEST:.c=.c.o)
+MIXED_TEST=$(SOURCES_TEST:.c=.o)
 OBJECTS_TEST=$(MIXED_TEST:.cpp=.o)
 
 # Most frequently used automatic variables:
@@ -43,7 +43,7 @@ main-test: $(OBJECTS_TEST)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Automatic rule for all object files in build directory
-%.c.o: %.c
+%.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 	
 %.o: %.cpp
