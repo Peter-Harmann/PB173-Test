@@ -3,7 +3,7 @@
 
 # Variable settings
 CXXFLAGS=-Wall -Wextra 
-SOURCES_GEN=src/fact.cpp
+SOURCES_GEN=PB173 - First/PB173 - First/*.c
 # Source and object lists for main program
 SOURCES_MAIN=$(SOURCES_GEN) PB173 - First/PB173 - First/main.cpp
 OBJECTS_MAIN=$(SOURCES_MAIN:.cpp=.o)
