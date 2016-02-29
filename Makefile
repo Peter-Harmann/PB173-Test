@@ -2,7 +2,7 @@
 # Variables CC and CXX are automatically set on all UNIX systems.
 
 # Variable settings
-CXXFLAGS=-Wall -Wextra 
+CXXFLAGS=-Wall -Wextra  -fpermissive
 SOURCES_GEN=PB173/PB173/*.c
 # Source and object lists for main program
 SOURCES_MAIN=$(SOURCES_GEN) PB173/PB173/main.cpp
@@ -42,7 +42,7 @@ main-test: $(OBJECTS_TEST)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 	
 %.o: %.c
-	$(GCC) $(CXXFLAGS) -c -o $@ $<
+	$(GXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
 	rm -fr $(OBJECTS_MAIN) $(OBJECTS_TEST)
