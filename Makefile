@@ -9,7 +9,8 @@ CXXFLAGS=-Wall -Wextra
 SOURCES_GEN=PB173/PB173/*.c
 # Source and object lists for main program
 SOURCES_MAIN=$(SOURCES_GEN) PB173/PB173/main.cpp
-OBJECTS_MAIN=$(SOURCES_MAIN:.cpp=.o)
+MIXED_MAIN=$(SOURCES_MAIN:.c=.o)
+OBJECTS_MAIN=$(MIXED_MAIN:.cpp=.o)
 # Source and object lists for testing binary
 SOURCES_TEST=$(SOURCES_GEN) PB173/PB173/testing.cpp
 OBJECTS_TEST=$(SOURCES_TEST:.cpp=.o)

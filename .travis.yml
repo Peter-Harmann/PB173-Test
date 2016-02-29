@@ -11,4 +11,5 @@ compiler:
   - clang
 
 # script to run after build (run tests, etc.)
-script: make all test
+# script: make all test
+script: make main
