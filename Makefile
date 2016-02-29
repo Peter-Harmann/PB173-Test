@@ -1,8 +1,11 @@
 # Makefile example
 # Variables CC and CXX are automatically set on all UNIX systems.
 
+CC=gcc
+CFLAGS = -Wall -Wextra
+
 # Variable settings
-CXXFLAGS=-Wall -Wextra  -fpermissive
+CXXFLAGS=-Wall -Wextra
 SOURCES_GEN=PB173/PB173/*.c
 # Source and object lists for main program
 SOURCES_MAIN=$(SOURCES_GEN) PB173/PB173/main.cpp
@@ -42,7 +45,7 @@ main-test: $(OBJECTS_TEST)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 	
 %.o: %.c
-	$(GXX) $(CXXFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
 	rm -fr $(OBJECTS_MAIN) $(OBJECTS_TEST)
