@@ -1,10 +1,8 @@
 # Makefile example
 # Variables CC and CXX are automatically set on all UNIX systems.
 
-CC=gcc
-CFLAGS = -Wall -Wextra
-
 # Variable settings
+CFLAGS = -Wall -Wextra
 CXXFLAGS=-Wall -Wextra
 SOURCES_GEN=$(wildcard PB173/PB173/*.c)
 # Source and object lists for main program
