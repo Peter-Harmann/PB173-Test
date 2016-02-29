@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra
 
 # Variable settings
 CXXFLAGS=-Wall -Wextra
-SOURCES_GEN=PB173/PB173/*.c
+SOURCES_GEN=$(wildcard PB173/PB173/*.c)
 # Source and object lists for main program
 SOURCES_MAIN=$(SOURCES_GEN) PB173/PB173/main.cpp
 MIXED_MAIN=$(SOURCES_MAIN:.c=.c.o)
