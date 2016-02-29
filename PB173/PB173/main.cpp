@@ -53,7 +53,7 @@ int main(int argc, char ** argv) {
 			mbedtls_entropy_gather(&entropy);
 
 			mbedtls_ctr_drbg_context ctr_drbg;
-			char *personalization = "]76kXV-$P?0qdQtfpkTPUSvWcq&(dyub";
+			const char *personalization = "]76kXV-$P?0qdQtfpkTPUSvWcq&(dyub";
 
 			mbedtls_ctr_drbg_init(&ctr_drbg);
 			mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char *)personalization, strlen(personalization));
