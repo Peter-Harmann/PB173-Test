@@ -52,6 +52,7 @@ size_t remove_padding(unsigned char * str, size_t len) {
 }
 
 int encryptAndHash(istream & ifile, iostream & ofile, const char * key) {
+	if (strlen(key) != 16) throw CryptoException("Key has to be 16 characters long!");
 	if (ifile && ofile) {
 		mbedtls_entropy_context entropy;
 		mbedtls_entropy_init(&entropy);
@@ -98,20 +99,15 @@ int encryptAndHash(istream & ifile, iostream & ofile, const char * key) {
 		ofile.write(reinterpret_cast<char *>(hash), 64);
 	}
 	else {
-		if (!ifile) {
-			cout << "Invalid input file!" << endl;
-			return 3;
-		}
-		if (!ofile) {
-			cout << "Invalid output file!" << endl;
-			return 4;
-		}
+		if (!ifile) throw CryptoException("Invalid input file!");
+		if (!ofile) throw CryptoException("Invalid output file!");
 	}
 	return 0;
 }
 
 
 int decryptAndVerify(istream & ifile, ostream & ofile, const char * key) {
+	if (strlen(key) != 16) throw CryptoException("Key has to be 16 characters long!");
 	if (ifile && ofile) {
 		mbedtls_sha512_context sha;
 		mbedtls_sha512_init(&sha);
@@ -150,24 +146,17 @@ int decryptAndVerify(istream & ifile, ostream & ofile, const char * key) {
 		unsigned char hash[64];
 		mbedtls_sha512_finish(&sha, hash);
 
-		if (memcmp(ohash, hash, 64) != 0) {
+		if (memcmp(ohash, hash, 64) != 0) throw CryptoVerifycationException("File is corrupted or invalid format!");
 			//ofile.open(argv[4], fstream::out | fstream::binary);
 			//ofile.close();
-			cout << "File is corrupted or invalid format!" << endl;
-			cout << "Press any key to continue!";
-			cin.get();
-			return 2;
-		}
+			//cout << "File is corrupted or invalid format!" << endl;
+			//cout << "Press any key to continue!";
+			//cin.get();
+			//return 2;
 	}
 	else {
-		if (!ifile) {
-			cout << "Invalid input file!" << endl;
-			return 3;
-		}
-		if (!ofile) {
-			cout << "Invalid output file!" << endl;
-			return 4;
-		}
+		if (!ifile) throw CryptoException("Invalid input file!");
+		if (!ofile) throw CryptoException("Invalid output file!");
 	}
 	return 0;
 }

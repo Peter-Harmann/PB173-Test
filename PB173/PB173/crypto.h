@@ -12,9 +12,8 @@
 	@version 1
 	@param ifile	input stream to encrypt
 	@param output	stream to output encrypted data
-	@return			0 if successfull,
-					3 on invalid input stream
-					4 on invalid output stream
+	@return			0 if successfull
+	@throw			CryptoException
 */
 int encryptAndHash(std::istream & ifile, std::iostream & ofile, const char * key);
 
@@ -26,10 +25,8 @@ int encryptAndHash(std::istream & ifile, std::iostream & ofile, const char * key
 	@version 1
 	@param ifile	input stream to decrypt
 	@param output	stream to output decrypted data
-	@return			0 if successfull,
-					2 on corrupted file
-					3 on invalid input stream
-					4 on invalid output stream
+	@return			0 if successfull
+	@throw			CryptoException
 */
 int decryptAndVerify(std::istream & ifile, std::ostream & ofile, const char * key);
 
@@ -43,4 +40,9 @@ int decryptAndVerify(std::istream & ifile, std::ostream & ofile, const char * ke
 class CryptoException : public std::runtime_error {
 public:
 	CryptoException(const char * message) : runtime_error(message) {};
+};
+
+class CryptoVerifycationException : public CryptoException {
+public:
+	CryptoVerifycationException(const char * message) : CryptoException(message) {};
 };

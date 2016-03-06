@@ -12,10 +12,8 @@ using namespace std;
 
 int main(int argc, const char ** argv) {
 	if (argc != 5) return 1;
-	if (strlen(argv[2]) != 16) {
-		cout << "Key has to be 16 characters long!";
-		return 6;
-	}
+
+	int ret = 0;
 
 
 	if (std::string("-e").compare(argv[1]) == 0) {
@@ -25,13 +23,16 @@ int main(int argc, const char ** argv) {
 		ifile.open(argv[3], fstream::in | fstream::binary);
 		ofile.open(argv[4], fstream::out | fstream::binary);
 
-		int ret = encryptAndHash(ifile, ofile, argv[2]);
+		try {
+			encryptAndHash(ifile, ofile, argv[2]);
+		}
+		catch (CryptoException & e) {
+			cout << e.what() << endl;
+			ret = 1;
+		}
 
 		ifile.close();
 		ofile.close();
-
-		if (ret) return ret;
-
 	}
 	else if (std::string("-d").compare(argv[1]) == 0) {
 		ifstream ifile;
@@ -39,24 +40,28 @@ int main(int argc, const char ** argv) {
 		ifile.open(argv[3], fstream::in | fstream::binary);
 		ofile.open(argv[4], fstream::out | fstream::binary);
 
-		int ret = decryptAndVerify(ifile, ofile, argv[2]);
+		try {
+			int ret = decryptAndVerify(ifile, ofile, argv[2]);
+		}
+		catch (CryptoVerifycationException & e) {
+			cout << e.what() << endl;
+			ofile.close();
+			ofile.open(argv[4], fstream::out | fstream::binary);
+			ret = 2;
+		}
+		catch (CryptoException & e) {
+			cout << e.what() << endl;
+			ret = 1;
+		}
 
 		ifile.close();
 		ofile.close();
-
-		if (ret) {
-			if (ret == 2) {
-				ofile.open(argv[4], fstream::out | fstream::binary);
-				ofile.close();
-			}
-			return ret;
-		}
 	}
 	else {
 		cout << "Invalid switch. -e and -d allowed.";
-		return 5;
+		ret = 3;
 	}
-	return 0;
+	return ret;
 }
 
 
