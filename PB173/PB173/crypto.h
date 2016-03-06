@@ -2,7 +2,7 @@
 
 
 #include <iostream>
-#include <exception>
+#include <stdexcept>
 
 
 /**
@@ -40,7 +40,7 @@ int decryptAndVerify(std::istream & ifile, std::ostream & ofile, const char * ke
 
 
 
-class CryptoException : public std::exception {
+class CryptoException : public std::runtime_error {
 public:
-	CryptoException(const char * message) : exception(message) {};
+	CryptoException(const char * message) : runtime_error(message) {};
 };
