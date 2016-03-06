@@ -41,11 +41,11 @@ size_t remove_padding(unsigned char * str, size_t len) {
 	if (rem > len) {
 		cout << "Padd:" << endl;
 		print_bin_data(str, len);
-		throw invalid_argument("Wrong padding!");
+		throw CryptoException("Wrong padding!");
 	}
 	for (size_t i = len - 1; i >= len - rem; --i) {
 		if (str[i] != rem) {
-			throw invalid_argument("Wrong padding!");
+			throw CryptoException("Wrong padding!");
 		}
 	}
 	return len - rem;

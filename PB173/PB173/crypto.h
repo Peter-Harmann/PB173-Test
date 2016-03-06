@@ -2,6 +2,7 @@
 
 
 #include <iostream>
+#include <exception>
 
 
 /**
@@ -31,3 +32,15 @@ int encryptAndHash(std::istream & ifile, std::iostream & ofile, const char * key
 					4 on invalid output stream
 */
 int decryptAndVerify(std::istream & ifile, std::ostream & ofile, const char * key);
+
+
+
+
+
+
+
+
+class CryptoException : public std::exception {
+public:
+	CryptoException(const char * message) : exception(message) {};
+};
