@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BAAAB026-B768-4BF5-B027-3AA72EB2FA45}</ProjectGuid>
+    <ProjectGuid>{5938BCB8-315D-4FD3-A190-06E61A887BC2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>PB173First</RootNamespace>
+    <RootNamespace>PB173FirstTest</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -88,7 +88,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,7 +101,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,7 +116,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +133,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,19 +142,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="aes.c" />
-    <ClCompile Include="aesni.c" />
-    <ClCompile Include="base64.c" />
-    <ClCompile Include="crypto.cpp" />
-    <ClCompile Include="ctr_drbg.c" />
-    <ClCompile Include="entropy.c" />
-    <ClCompile Include="entropy_poll.c" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="sha512.c" />
-    <ClCompile Include="timing.c" />
+    <ClCompile Include="..\PB173\aes.c" />
+    <ClCompile Include="..\PB173\aesni.c" />
+    <ClCompile Include="..\PB173\base64.c" />
+    <ClCompile Include="..\PB173\crypto.cpp" />
+    <ClCompile Include="..\PB173\ctr_drbg.c" />
+    <ClCompile Include="..\PB173\entropy.c" />
+    <ClCompile Include="..\PB173\entropy_poll.c" />
+    <ClCompile Include="..\PB173\sha512.c" />
+    <ClCompile Include="..\PB173\testing.cpp" />
+    <ClCompile Include="..\PB173\timing.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="crypto.h" />
+    <ClInclude Include="..\PB173\catch.hpp" />
+    <ClInclude Include="..\PB173\crypto.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

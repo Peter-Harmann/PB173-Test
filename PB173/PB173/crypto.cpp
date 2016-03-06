@@ -19,6 +19,15 @@
 using namespace std;
 
 
+void print_bin_data(unsigned char * data, size_t len) {
+	short tmp;
+	for (size_t i = 0; i < len; ++i) {
+		tmp = data[i];
+		cout << tmp << " ";
+	}
+	cout << endl << endl;
+}
+
 size_t add_padding(char * str, size_t len) {
 	char add = 16 - (len % 16);
 	for (size_t i = len; i < len + add; ++i) {
@@ -29,6 +38,16 @@ size_t add_padding(char * str, size_t len) {
 
 size_t remove_padding(unsigned char * str, size_t len) {
 	unsigned char rem = str[len - 1];
+	if (rem > len) {
+		cout << "Padd:" << endl;
+		print_bin_data(str, len);
+		throw invalid_argument("Wrong padding!");
+	}
+	for (size_t i = len - 1; i >= len - rem; --i) {
+		if (str[i] != rem) {
+			throw invalid_argument("Wrong padding!");
+		}
+	}
 	return len - rem;
 }
 
@@ -75,7 +94,7 @@ int encryptAndHash(istream & ifile, iostream & ofile, const char * key) {
 
 
 		mbedtls_sha512_finish(&sha, hash);
-		ofile.seekg(0, ofile.beg);
+		ofile.seekp(ofile.beg);
 		ofile.write(reinterpret_cast<char *>(hash), 64);
 	}
 	else {
@@ -107,19 +126,21 @@ int decryptAndVerify(istream & ifile, ostream & ofile, const char * key) {
 		unsigned char iv[16];
 		size_t len = BUFFER_SIZE;
 		unsigned char ohash[64];
+		bool end = false;
 
 		ifile.read(reinterpret_cast<char *>(ohash), 64);
 		ifile.read(reinterpret_cast<char *>(iv), 16);
 
-		while (!ifile.eof()) {
+		while (!end) {
 			ifile.read(buffer, BUFFER_SIZE);
+			len = static_cast<size_t>(ifile.gcount());
 
-			if (ifile.eof()) len = static_cast<size_t>(ifile.gcount());
+			end = ifile.peek() == EOF;
 
 			mbedtls_sha512_update(&sha, reinterpret_cast<unsigned char *>(buffer), len);
 			mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, len, iv, reinterpret_cast<unsigned char *>(buffer), obuffer);
 
-			if (ifile.eof()) {
+			if (end) {
 				len = remove_padding(obuffer, len);
 			}
 

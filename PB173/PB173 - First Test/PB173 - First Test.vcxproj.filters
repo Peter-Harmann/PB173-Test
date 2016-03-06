@@ -15,40 +15,43 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="..\PB173\aes.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="aes.c">
+    <ClCompile Include="..\PB173\aesni.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sha512.c">
+    <ClCompile Include="..\PB173\base64.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="aesni.c">
+    <ClCompile Include="..\PB173\crypto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="base64.c">
+    <ClCompile Include="..\PB173\ctr_drbg.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ctr_drbg.c">
+    <ClCompile Include="..\PB173\entropy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entropy.c">
+    <ClCompile Include="..\PB173\entropy_poll.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entropy_poll.c">
+    <ClCompile Include="..\PB173\sha512.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="timing.c">
+    <ClCompile Include="..\PB173\testing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="crypto.cpp">
+    <ClCompile Include="..\PB173\timing.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="crypto.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\PB173\catch.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PB173\crypto.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
