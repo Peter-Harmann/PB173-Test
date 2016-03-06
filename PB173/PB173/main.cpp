@@ -41,7 +41,7 @@ int main(int argc, const char ** argv) {
 		ofile.open(argv[4], fstream::out | fstream::binary);
 
 		try {
-			int ret = decryptAndVerify(ifile, ofile, argv[2]);
+			decryptAndVerify(ifile, ofile, argv[2]);
 		}
 		catch (CryptoVerifycationException & e) {
 			cout << e.what() << endl;
