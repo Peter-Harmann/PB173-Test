@@ -39,8 +39,8 @@ size_t add_padding(char * str, size_t len) {
 size_t remove_padding(unsigned char * str, size_t len) {
 	unsigned char rem = str[len - 1];
 	if (rem > len) {
-		cout << "Padd:" << endl;
-		print_bin_data(str, len);
+		//cout << "Padd:" << endl;
+		//print_bin_data(str, len);
 		throw CryptoException("Wrong padding!");
 	}
 	for (size_t i = len - 1; i >= len - rem; --i) {
@@ -51,9 +51,16 @@ size_t remove_padding(unsigned char * str, size_t len) {
 	return len - rem;
 }
 
-int encryptAndHash(istream & ifile, iostream & ofile, const char * key) {
+int encryptAndHash(istream & ifile, ostream & ofile, const char * key) {
 	if (strlen(key) != 16) throw CryptoException("Key has to be 16 characters long!");
-	if (ifile && ofile) {
+
+	// Validate streams
+	ifile.peek();
+	ofile << 'c';
+	ofile.seekp(-1, ios_base::cur);
+	//------------------------------
+
+	if (ifile.good() && ofile.good()) {
 		mbedtls_entropy_context entropy;
 		mbedtls_entropy_init(&entropy);
 		mbedtls_entropy_gather(&entropy);
@@ -99,8 +106,8 @@ int encryptAndHash(istream & ifile, iostream & ofile, const char * key) {
 		ofile.write(reinterpret_cast<char *>(hash), 64);
 	}
 	else {
-		if (!ifile) throw CryptoException("Invalid input file!");
-		if (!ofile) throw CryptoException("Invalid output file!");
+		if (!ifile.good()) throw CryptoException("Invalid input file!");
+		else throw CryptoException("Invalid output file!");
 	}
 	return 0;
 }
@@ -108,6 +115,13 @@ int encryptAndHash(istream & ifile, iostream & ofile, const char * key) {
 
 int decryptAndVerify(istream & ifile, ostream & ofile, const char * key) {
 	if (strlen(key) != 16) throw CryptoException("Key has to be 16 characters long!");
+
+	// Validate streams
+	ifile.peek();
+	ofile << 'c';
+	ofile.seekp(-1, ios_base::cur);
+	//------------------------------
+
 	if (ifile && ofile) {
 		mbedtls_sha512_context sha;
 		mbedtls_sha512_init(&sha);
@@ -137,26 +151,19 @@ int decryptAndVerify(istream & ifile, ostream & ofile, const char * key) {
 			mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, len, iv, reinterpret_cast<unsigned char *>(buffer), obuffer);
 
 			if (end) {
+				unsigned char hash[64];
+				mbedtls_sha512_finish(&sha, hash);
+
+				if (memcmp(ohash, hash, 64) != 0) throw CryptoVerifycationException("File is corrupted or invalid format!");
 				len = remove_padding(obuffer, len);
 			}
 
 			ofile.write(reinterpret_cast<char *>(obuffer), len);
 		}
-
-		unsigned char hash[64];
-		mbedtls_sha512_finish(&sha, hash);
-
-		if (memcmp(ohash, hash, 64) != 0) throw CryptoVerifycationException("File is corrupted or invalid format!");
-			//ofile.open(argv[4], fstream::out | fstream::binary);
-			//ofile.close();
-			//cout << "File is corrupted or invalid format!" << endl;
-			//cout << "Press any key to continue!";
-			//cin.get();
-			//return 2;
 	}
 	else {
-		if (!ifile) throw CryptoException("Invalid input file!");
-		if (!ofile) throw CryptoException("Invalid output file!");
+		if (!ifile.good()) throw CryptoException("Invalid input file!");
+		else throw CryptoException("Invalid output file!");
 	}
 	return 0;
 }

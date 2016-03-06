@@ -15,7 +15,7 @@
 	@return			0 if successfull
 	@throw			CryptoException
 */
-int encryptAndHash(std::istream & ifile, std::iostream & ofile, const char * key);
+int encryptAndHash(std::istream & ifile, std::ostream & ofile, const char * key);
 
 
 /**
